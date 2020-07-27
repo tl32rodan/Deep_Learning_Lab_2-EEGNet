@@ -3,7 +3,13 @@ import torch.nn as nn
 from collections import OrderedDict
 
 class EEGNet(nn.Sequential):
-    def __init__(self):
+    def __init__(self,act_f = 'elu',*args, **kwargs):
+        act_f_list = {'elu':nn.ELU,
+                      'leakyrelu':nn.LeakyReLU,
+                      'relu': nn.ReLU,
+                      'prerelu':nn.PReLU
+                     }
+        
         ### Layer 1
         firstconv = nn.Sequential(
             nn.Conv2d(1,16,kernel_size=(1,51),stride=(1,1), padding=(0,25), bias=False),
@@ -14,7 +20,9 @@ class EEGNet(nn.Sequential):
         depthwiseConv = nn.Sequential(
             nn.Conv2d(16,32,kernel_size=(2,1),stride=(1,1),groups=16,bias=False),
             nn.BatchNorm2d(32),
-            nn.ELU(alpha=0.1),
+            # nn.ELU(alpha=0.1),
+            # Change into programmable activation functions
+            act_f_list[act_f](*args, **kwargs),
             nn.AvgPool2d(kernel_size=(1,4), stride=(1,4),padding=0),
             nn.Dropout2d(p = 0.25)
         )
@@ -23,7 +31,9 @@ class EEGNet(nn.Sequential):
         seperableConv = nn.Sequential(
             nn.Conv2d(32,32,kernel_size=(1,15),stride=(1,1),padding=(0,7),bias=False),
             nn.BatchNorm2d(32),
-            nn.ELU(alpha=0.1),
+            # nn.ELU(alpha=0.1),
+            # Change into programmable activation functions
+            act_f_list[act_f](*args, **kwargs),
             nn.AvgPool2d(kernel_size=(1,8), stride=(1,8),padding=0),
             nn.Dropout2d(p = 0.25),
             nn.Flatten()
