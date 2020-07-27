@@ -7,7 +7,7 @@ class EEGNet(nn.Sequential):
         act_f_list = {'elu':nn.ELU,
                       'leakyrelu':nn.LeakyReLU,
                       'relu': nn.ReLU,
-                      'prerelu':nn.PReLU
+                      'prelu':nn.PReLU
                      }
         
         ### Layer 1
