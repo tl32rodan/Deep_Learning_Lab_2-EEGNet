@@ -29,7 +29,7 @@ def run(model, train_data, train_label, test_data, test_label, num_epochs = 300,
     
     # Setup loss function & optimizer
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(),lr=0.001)
+    optimizer = optim.Adam(model.parameters(),lr=1e-2)
     
     for epoch in range(1,num_epochs+1):
         # Loss in each epoch
