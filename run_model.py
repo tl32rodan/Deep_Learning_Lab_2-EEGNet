@@ -1,9 +1,20 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
 
+def draw_figure(plt,lines,labels=None, loc='best'):    
+    if labels is None:
+        for line in lines:
+            plt.plot(range(len(line)), line)
+    else:
+        for line, label in zip(lines,labels):
+            plt.plot(range(len(line)), line, label = label)
+        
+        plt.legend(loc='best')
+    plt.show()
 
-def run(model, train_data, train_label, test_data, test_label, num_epochs = 300, batch_size = 80, print_freq = 20):
+def run(model, train_data, train_label, test_data, test_label, num_epochs = 300, batch_size = 64, print_freq = 20):
     # Record list
     loss_list = []
     acc_train_list = []
