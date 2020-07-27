@@ -16,7 +16,7 @@ class DeepConvNet(nn.Sequential):
         firstConv = nn.Sequential(
             nn.Conv2d(1,25,kernel_size=(1,5)),
             nn.Conv2d(25,25,kernel_size=(self.C,1)),
-            nn.BatchNorm2d(2*25),
+            nn.BatchNorm2d(25),
             act_f_list[act_f](*args, **kwargs),# Activation function
             nn.MaxPool2d((1,2)),
             nn.Dropout2d()
@@ -25,7 +25,7 @@ class DeepConvNet(nn.Sequential):
         ### Layer 2
         secondConv = nn.Sequential(
             nn.Conv2d(25,50,kernel_size=(1,5)),
-            nn.BatchNorm2d(2*50),
+            nn.BatchNorm2d(50),
             act_f_list[act_f](*args, **kwargs),# Activation function
             nn.MaxPool2d((1,2)),
             nn.Dropout2d()
@@ -34,7 +34,7 @@ class DeepConvNet(nn.Sequential):
         ### Layer 3
         thirdConv = nn.Sequential(
             nn.Conv2d(50,100,kernel_size=(1,5)),
-            nn.BatchNorm2d(2*100),
+            nn.BatchNorm2d(100),
             act_f_list[act_f](*args, **kwargs),# Activation function
             nn.MaxPool2d((1,2)),
             nn.Dropout2d()
@@ -43,7 +43,7 @@ class DeepConvNet(nn.Sequential):
         ### Layer 4
         fourthConv = nn.Sequential(
             nn.Conv2d(100,200,kernel_size=(1,5)),
-            nn.BatchNorm2d(2*200),
+            nn.BatchNorm2d(200),
             act_f_list[act_f](*args, **kwargs),# Activation function
             nn.MaxPool2d((1,2)),
             nn.Dropout2d(),
@@ -52,7 +52,7 @@ class DeepConvNet(nn.Sequential):
         
         ### Fully connected layer
         classify = nn.Sequential(
-            nn.Linear(in_features=736, out_features=2, bias=True)
+            nn.Linear(in_features=8600, out_features=2, bias=True)
         )
         super(DeepConvNet, self).__init__(OrderedDict([
                   ('firstConv' , firstConv),

@@ -48,7 +48,7 @@ def run(model, train_data, train_label, test_data, test_label, num_epochs = 300,
 
             # Run the net & Update
             outputs = model(batch_x)
-            #print('output = ',outputs)
+            
             loss = criterion(outputs, batch_y)
             loss.backward()
             optimizer.step()
