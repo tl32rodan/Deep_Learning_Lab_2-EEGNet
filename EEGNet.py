@@ -61,10 +61,15 @@ class EEGNet(nn.Sequential):
         x = super(EEGNet,self).forward(x)
         return x
     
-    def infer_and_cal_acc(self,x,ground_truth):
+    def infer_and_cal_acc(self,x,ground_truth,print_enable=False):
         # Run self.forward(x) and calculate accuracy with ground_truth
         
+        # First, change to eval mode
+        self.eval()
+        
         y = self.forward(x)
+        if print_enable:
+            print('y = ',y)
         # Get the calssification result of y,
         # because y has 2 channels for each class
         _, y_hat = torch.max(y,1)

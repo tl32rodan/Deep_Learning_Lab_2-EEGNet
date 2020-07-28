@@ -42,6 +42,9 @@ def run(model, train_data, train_label, test_data, test_label, \
         # Make train_data run in batch
         permutation = torch.randperm(train_data.shape[0])
 
+        # Change to train mode
+        model.train()
+        
         # Run with data batches
         for i in range(0,train_data.shape[0], batch_size):
             # Zero the gradients
@@ -62,12 +65,13 @@ def run(model, train_data, train_label, test_data, test_label, \
         if scheduler is not None:
             scheduler.step(loss)
         
+        # Change to eval mode
+        model.eval()
         # Calclate accuracy
         train_acc = model.infer_and_cal_acc(train_data,train_label)
         test_acc = model.infer_and_cal_acc(test_data,test_label)
         acc_train_list.append(train_acc)
         acc_test_list.append(test_acc)
-
 
         loss_list.append(epoch_loss)
         if epoch % print_freq == 0:
