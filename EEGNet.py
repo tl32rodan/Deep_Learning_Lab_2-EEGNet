@@ -18,11 +18,18 @@ class EEGNet(nn.Sequential):
         
         ### Layer 2
         depthwiseConv = nn.Sequential(
-            nn.Conv2d(hyper*16,hyper*32,kernel_size=(2,1),stride=(1,1),groups=16,bias=False),
+            nn.Conv2d(hyper*16,hyper*32,kernel_size=(2,1),stride=(1,1),groups=1,bias=False),
             nn.BatchNorm2d(hyper*32),
             # nn.ELU(alpha=0.1),
             # Change into programmable activation functions
             act_f_list[act_f](*args, **kwargs),
+            
+            nn.Conv2d(hyper*32,hyper*32,kernel_size=(1,10),stride=(1,1),groups=1,bias=True),
+            nn.BatchNorm2d(hyper*32),
+            # nn.ELU(alpha=0.1),
+            # Change into programmable activation functions
+            act_f_list[act_f](*args, **kwargs),
+            
             nn.AvgPool2d(kernel_size=(1,4), stride=(1,4),padding=0),
             nn.Dropout2d(p = 0.1)
         )
@@ -44,7 +51,7 @@ class EEGNet(nn.Sequential):
             nn.Linear(in_features=hyper*736, out_features=2, bias=True)
         )
         super(EEGNet, self).__init__(OrderedDict([
-                  ('firstconv'    , firstconv),
+                  ('firstConv'    , firstconv),
                   ('depthwiseConv', depthwiseConv),
                   ('seperableConv', seperableConv),
                   ('classify'     , classify)
@@ -64,4 +71,4 @@ class EEGNet(nn.Sequential):
         # Calculate accuracy
         acc = 100*(len(ground_truth[ground_truth==y_hat])/len(ground_truth))
         return acc
-        
+

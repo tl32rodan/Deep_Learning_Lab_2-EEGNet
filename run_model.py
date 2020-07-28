@@ -17,6 +17,7 @@ def draw_figure(plt,lines,labels=None, loc='best'):
 def run(model, train_data, train_label, test_data, test_label, \
         criterion = nn.CrossEntropyLoss(),\
         optimizer = None,\
+        scheduler = None,\
         num_epochs = 300, batch_size = 64, print_freq = 20):
     # Record list
     loss_list = []
@@ -58,6 +59,9 @@ def run(model, train_data, train_label, test_data, test_label, \
 
             epoch_loss += loss.item()
 
+        if scheduler is not None:
+            scheduler.step(loss)
+        
         # Calclate accuracy
         train_acc = model.infer_and_cal_acc(train_data,train_label)
         test_acc = model.infer_and_cal_acc(test_data,test_label)
