@@ -128,7 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*.npz
 *.pptx
 source_code/__pycache__/**
 *.zip
