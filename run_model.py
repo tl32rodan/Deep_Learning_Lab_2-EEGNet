@@ -14,7 +14,10 @@ def draw_figure(plt,lines,labels=None, loc='best'):
         plt.legend(loc='best')
     plt.show()
 
-def run(model, train_data, train_label, test_data, test_label, num_epochs = 300, batch_size = 64, print_freq = 20):
+def run(model, train_data, train_label, test_data, test_label, \
+        criterion = nn.CrossEntropyLoss(),\
+        optimizer = None,\
+        num_epochs = 300, batch_size = 64, print_freq = 20):
     # Record list
     loss_list = []
     acc_train_list = []
@@ -27,9 +30,9 @@ def run(model, train_data, train_label, test_data, test_label, num_epochs = 300,
     test_data   = test_data.to(device)
     test_label  = test_label.to(device)
     
-    # Setup loss function & optimizer
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(),lr=1e-2)
+    # Setup optimizer
+    if optimizer is None:
+        optimizer = optim.Adam(model.parameters(),lr=1e-2)
     
     for epoch in range(1,num_epochs+1):
         # Loss in each epoch
@@ -56,12 +59,16 @@ def run(model, train_data, train_label, test_data, test_label, num_epochs = 300,
             epoch_loss += loss.item()
 
         # Calclate accuracy
-        acc_train_list.append(model.infer_and_cal_acc(train_data,train_label))
-        acc_test_list.append(model.infer_and_cal_acc(test_data,test_label))
+        train_acc = model.infer_and_cal_acc(train_data,train_label)
+        test_acc = model.infer_and_cal_acc(test_data,test_label)
+        acc_train_list.append(train_acc)
+        acc_test_list.append(test_acc)
 
 
         loss_list.append(epoch_loss)
         if epoch % print_freq == 0:
             print('epoch ',epoch,' : loss = ',epoch_loss)
+            print('Train acc = ',train_acc)
+            print('Test acc = ',test_acc)
             
     return loss_list, acc_train_list, acc_test_list

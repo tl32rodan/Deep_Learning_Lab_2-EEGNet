@@ -3,7 +3,7 @@ import torch.nn as nn
 from collections import OrderedDict
 
 class EEGNet(nn.Sequential):
-    def __init__(self,act_f = 'elu',*args, **kwargs):
+    def __init__(self,act_f = 'elu',hyper = 1,*args, **kwargs):
         act_f_list = {'elu':nn.ELU,
                       'leakyrelu':nn.LeakyReLU,
                       'relu': nn.ReLU,
@@ -12,36 +12,36 @@ class EEGNet(nn.Sequential):
         
         ### Layer 1
         firstconv = nn.Sequential(
-            nn.Conv2d(1,16,kernel_size=(1,51),stride=(1,1), padding=(0,25), bias=False),
-            nn.BatchNorm2d(16)
+            nn.Conv2d(1,hyper*16,kernel_size=(1,51),stride=(1,1), padding=(0,25), bias=False),
+            nn.BatchNorm2d(hyper*16)
         )
         
         ### Layer 2
         depthwiseConv = nn.Sequential(
-            nn.Conv2d(16,32,kernel_size=(2,1),stride=(1,1),groups=16,bias=False),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(hyper*16,hyper*32,kernel_size=(2,1),stride=(1,1),groups=16,bias=False),
+            nn.BatchNorm2d(hyper*32),
             # nn.ELU(alpha=0.1),
             # Change into programmable activation functions
             act_f_list[act_f](*args, **kwargs),
             nn.AvgPool2d(kernel_size=(1,4), stride=(1,4),padding=0),
-            nn.Dropout2d(p = 0.25)
+            nn.Dropout2d(p = 0.1)
         )
         
         ### Layer 3
         seperableConv = nn.Sequential(
-            nn.Conv2d(32,32,kernel_size=(1,15),stride=(1,1),padding=(0,7),bias=False),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(hyper*32,hyper*32,kernel_size=(1,15),stride=(1,1),padding=(0,7),bias=False),
+            nn.BatchNorm2d(hyper*32),
             # nn.ELU(alpha=0.1),
             # Change into programmable activation functions
             act_f_list[act_f](*args, **kwargs),
             nn.AvgPool2d(kernel_size=(1,8), stride=(1,8),padding=0),
-            nn.Dropout2d(p = 0.25),
+            nn.Dropout2d(p = 0.1),
             nn.Flatten()
         )
         
         ### Fully connected layer
         classify = nn.Sequential(
-            nn.Linear(in_features=736, out_features=2, bias=True)
+            nn.Linear(in_features=hyper*736, out_features=2, bias=True)
         )
         super(EEGNet, self).__init__(OrderedDict([
                   ('firstconv'    , firstconv),
