@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
+# %%
 
-# In[1]:
+# %%
 
 
 import torch
@@ -15,14 +16,14 @@ from EEGNet import EEGNet
 from run_model import run, draw_figure
 
 
-# In[2]:
+# %%
 
 
 from dataloader import read_bci_data
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-# In[3]:
+# %%
 
 
 # Load data
@@ -37,7 +38,7 @@ test_label  = torch.from_numpy(test_label).type(torch.long).to(device)
 
 # # Run Model
 
-# In[4]:
+# %%
 
 
 net_list = {}
@@ -46,7 +47,7 @@ label_list = ['elu_train','elu_test','leaky_relu_train','leaky_relu_test','relu_
 #label_list = ['leaky_relu_train','leaky_relu_test']
 
 
-# In[5]:
+# %%
 
 
 # ELU
@@ -60,7 +61,7 @@ line_list.append(acc_train_list)
 line_list.append(acc_test_list)
 
 
-# In[6]:
+# %%
 
 
 # Leaky_relu
@@ -74,7 +75,7 @@ line_list.append(acc_train_list)
 line_list.append(acc_test_list)
 
 
-# In[7]:
+# %%
 
 
 # Relu
@@ -90,13 +91,13 @@ line_list.append(acc_test_list)
 
 # # Draw loss & accuracy figures
 
-# In[8]:
+# %%
 
 
 plt.figure(figsize=[24,18])
 draw_figure(plt,line_list,label_list, loc='best') 
 
-# In[23]:
+# %%
 
 
 print('Test Accuracy:')
